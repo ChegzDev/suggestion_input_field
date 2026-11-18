@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:material_ui/material_ui.dart';
 import 'package:suggestion_input_field/suggestion_input_field.dart';
@@ -14,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Suggestion Input Field',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(colorSchemeSeed: Colors.blue),
       home: const MyHomePage(title: 'Suggestion Input Field'),
     );
   }
@@ -30,22 +29,22 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Customer? selectedCustomer;
-  FutureOr<List<Customer>> fetchCustomerData(String filterText) async {
-    ///list fetch from async task or non async task
-    final List<Customer> customers = List.generate(20, (index) {
-      final random = Random();
-      final id = 'C${random.nextInt(10000)}';
-      final name = 'Customer ${index + 1}';
-      final mobile = '555-555-${random.nextInt(10000)}';
-      return Customer(id: id, name: name, mobile: mobile);
-    });
 
-    /// return data with filter
-    return customers
-        .where(
-          (element) =>
-              element.name.toLowerCase().contains(filterText.toLowerCase()),
-        )
+  /// Stands in for a database or API.
+  static final List<Customer> _allCustomers = List.generate(
+    20,
+    (index) => Customer(
+      id: 'C${index + 1}',
+      name: 'Customer ${index + 1}',
+      mobile: '555-555-${(1000 + index).toString()}',
+    ),
+  );
+
+  Future<List<Customer>> fetchCustomerData(String filterText) async {
+    // Simulate network latency.
+    await Future<void>.delayed(const Duration(milliseconds: 150));
+    return _allCustomers
+        .where((c) => c.name.toLowerCase().contains(filterText.toLowerCase()))
         .toList();
   }
 
@@ -55,47 +54,47 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(title: Text(widget.title)),
       body: Center(
         child: SizedBox(
-          width: 300,
+          width: 320,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               TextButton(
-                onPressed: () => setState(() {
-                  selectedCustomer = null;
-                }),
-                child: const Text('clear customer from out side'),
+                onPressed: () => setState(() => selectedCustomer = null),
+                child: const Text('Clear customer from outside'),
               ),
               TextButton(
-                onPressed: () => setState(() {
-                  selectedCustomer = Customer(
-                    id: "100",
-                    name: "OutSide Customer",
-                    mobile: "555-555-5555",
-                  );
-                }),
-                child: const Text('set customer from out side'),
+                onPressed: () => setState(
+                  () => selectedCustomer = Customer(
+                    id: '100',
+                    name: 'Outside Customer',
+                    mobile: '555-555-5555',
+                  ),
+                ),
+                child: const Text('Set customer from outside'),
               ),
               SuggestionTextField<Customer>(
                 value: selectedCustomer,
+                debounceDuration: const Duration(milliseconds: 250),
                 suggestionFetch: (textEditingValue) =>
                     fetchCustomerData(textEditingValue.text),
-                textFieldContent: TextFieldContent(
-                  decoration: const InputDecoration(
-                    labelText: 'Select Customer',
-                  ),
+                textFieldContent: const TextFieldContent(
+                  decoration: InputDecoration(labelText: 'Select Customer'),
                 ),
                 displayStringForOption: (option) => option.name,
-                onSelected: (option) {
-                  setState(() {
-                    selectedCustomer = option;
-                  });
-                },
-                onClose: () {
-                  setState(() {
-                    selectedCustomer = null;
-                  });
-                },
+                itemBuilder: (customer) => ListTile(
+                  title: Text(customer.name),
+                  subtitle: Text(customer.mobile),
+                ),
+                onSelected: (option) =>
+                    setState(() => selectedCustomer = option),
+                // The user edited the text away from the selected customer.
+                onSelectionCleared: () =>
+                    setState(() => selectedCustomer = null),
+                // The clear button was tapped.
+                onClose: () => setState(() => selectedCustomer = null),
               ),
+              const SizedBox(height: 16),
+              Text('Selected: ${selectedCustomer?.name ?? 'none'}'),
             ],
           ),
         ),
