@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:suggestion_input_field/suggestion_input_field.dart';
 
 void main() {
@@ -14,9 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Suggestion Input Field',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: const MyHomePage(title: 'Suggestion Input Field'),
     );
   }
@@ -44,17 +42,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
     /// return data with filter
     return customers
-        .where((element) =>
-            element.name.toLowerCase().contains(filterText.toLowerCase()))
+        .where(
+          (element) =>
+              element.name.toLowerCase().contains(filterText.toLowerCase()),
+        )
         .toList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title)),
       body: Center(
         child: SizedBox(
           width: 300,
@@ -62,18 +60,21 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               TextButton(
-                  onPressed: () => setState(() {
-                        selectedCustomer = null;
-                      }),
-                  child: const Text('clear customer from out side')),
+                onPressed: () => setState(() {
+                  selectedCustomer = null;
+                }),
+                child: const Text('clear customer from out side'),
+              ),
               TextButton(
-                  onPressed: () => setState(() {
-                        selectedCustomer = Customer(
-                            id: "100",
-                            name: "OutSide Customer",
-                            mobile: "555-555-5555");
-                      }),
-                  child: const Text('set customer from out side')),
+                onPressed: () => setState(() {
+                  selectedCustomer = Customer(
+                    id: "100",
+                    name: "OutSide Customer",
+                    mobile: "555-555-5555",
+                  );
+                }),
+                child: const Text('set customer from out side'),
+              ),
               SuggestionTextField<Customer>(
                 value: selectedCustomer,
                 suggestionFetch: (textEditingValue) =>
