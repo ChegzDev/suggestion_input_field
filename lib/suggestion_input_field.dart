@@ -675,6 +675,7 @@ class _RawSuggestionFieldState<T extends Object>
     // material_ui-only:begin
     SemanticsService.sendAnnouncement(View.of(context), message, direction);
     // material_ui-only:end
+    // legacy-only: // ignore: deprecated_member_use
     // legacy-only: SemanticsService.announce(message, direction);
   }
 
