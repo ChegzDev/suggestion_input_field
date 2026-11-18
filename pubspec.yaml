@@ -1,17 +1,16 @@
 name: suggestion_input_field
 description: Customizable Flutter input field with suggestions for faster, more accurate user input. Ideal for forms and search bars.
-version: 0.2.0
+version: 0.0.7
 homepage: https://github.com/ChegzDev/suggestion_input_field
 repository: https://github.com/ChegzDev/suggestion_input_field
 
 environment:
-  sdk: ^3.13.0
-  flutter: ">=3.47.0"
+  sdk: ">=3.2.0 <4.0.0"
+  flutter: ">=3.16.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  material_ui: ^1.11.1
 
 dev_dependencies:
   flutter_test:

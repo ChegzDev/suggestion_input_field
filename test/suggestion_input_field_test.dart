@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:leak_tracker_flutter_testing/leak_tracker_flutter_testing.dart';
-import 'package:material_ui/material_ui.dart';
+// ignore: deprecated_member_use
+import 'package:flutter/material.dart';
 import 'package:suggestion_input_field/suggestion_input_field.dart';
 
 const fruits = ['Apple', 'Apricot', 'Banana', 'Cherry', 'Pineapple'];
@@ -15,13 +16,14 @@ Widget app(
   Widget child, {
   TextDirection dir = TextDirection.ltr,
   ThemeData? theme,
-}) => MaterialApp(
-  theme: theme,
-  home: Directionality(
-    textDirection: dir,
-    child: Scaffold(body: child),
-  ),
-);
+}) =>
+    MaterialApp(
+      theme: theme,
+      home: Directionality(
+        textDirection: dir,
+        child: Scaffold(body: child),
+      ),
+    );
 
 /// A host whose selected value lives in the parent, like a real form.
 class Host extends StatefulWidget {
@@ -527,9 +529,8 @@ void main() {
       );
       node.requestFocus();
       await tester.pump();
-      final controller = tester
-          .widget<TextField>(find.byType(TextField))
-          .controller!;
+      final controller =
+          tester.widget<TextField>(find.byType(TextField)).controller!;
       expect(
         controller.selection,
         const TextSelection(baseOffset: 0, extentOffset: 5),

@@ -1,6 +1,7 @@
 import 'package:example/main.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:material_ui/material_ui.dart';
+// ignore: deprecated_member_use
+import 'package:flutter/material.dart';
 
 void main() {
   testWidgets('select, set and clear a customer', (tester) async {

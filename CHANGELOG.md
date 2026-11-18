@@ -1,6 +1,6 @@
-## 0.2.0
+## 0.0.7
 
-For apps on `material_ui` (Flutter 3.47+). Apps on `package:flutter/material.dart` should use 0.0.7, which has the same fixes.
+For apps on `package:flutter/material.dart` (Flutter 3.16+). Same fixes as 0.2.0, which is the version for apps on `material_ui`.
 
 * Fixed out-of-order results: when an older request finishes after a newer one, its suggestions are discarded (previously they replaced the newer ones and could be selected with Enter).
 * Suggestions are fetched only when the text changes (not on cursor moves, not again after a selection or for the initial value). New `debounceDuration` option.

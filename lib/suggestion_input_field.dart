@@ -8,7 +8,8 @@ import 'dart:async';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
-import 'package:material_ui/material_ui.dart';
+// ignore: deprecated_member_use
+import 'package:flutter/material.dart';
 
 /// Options for the text field inside [SuggestionTextField], matching the
 /// parameters of [TextFormField].
@@ -478,18 +479,18 @@ class RawSuggestionField<T extends Object> extends StatefulWidget {
     this.onFetchError,
     this.optionsMaxHeight = 200.0,
     this.optionsMaxWidth,
-  }) : assert(
-         fieldViewBuilder != null ||
-             (key != null &&
-                 focusNode != null &&
-                 textEditingController != null),
-         'Pass in a fieldViewBuilder, or otherwise create a separate field and pass in the FocusNode, TextEditingController, and a key. Use the key with RawSuggestionField.onFieldSubmitted.',
-       ),
-       assert((focusNode == null) == (textEditingController == null)),
-       assert(
-         !(textEditingController != null && initialValue != null),
-         'textEditingController and initialValue cannot be simultaneously defined.',
-       );
+  })  : assert(
+          fieldViewBuilder != null ||
+              (key != null &&
+                  focusNode != null &&
+                  textEditingController != null),
+          'Pass in a fieldViewBuilder, or otherwise create a separate field and pass in the FocusNode, TextEditingController, and a key. Use the key with RawSuggestionField.onFieldSubmitted.',
+        ),
+        assert((focusNode == null) == (textEditingController == null)),
+        assert(
+          !(textEditingController != null && initialValue != null),
+          'textEditingController and initialValue cannot be simultaneously defined.',
+        );
 
   /// Builds the field whose input is used to get the options. Pass the
   /// provided [TextEditingController] and [FocusNode] to the field.
@@ -566,9 +567,9 @@ class _RawSuggestionFieldState<T extends Object>
   late FocusNode _focusNode;
   late final Map<Type, Action<Intent>> _actionMap;
   late final _SuggestionCallbackAction<AutocompletePreviousOptionIntent>
-  _previousOptionAction;
+      _previousOptionAction;
   late final _SuggestionCallbackAction<AutocompleteNextOptionIntent>
-  _nextOptionAction;
+      _nextOptionAction;
   late final _SuggestionCallbackAction<_PageIntent> _pageAction;
   late final _SuggestionCallbackAction<_EdgeIntent> _edgeAction;
   late final _SuggestionCallbackAction<DismissIntent> _hideOptionsAction;
@@ -584,24 +585,24 @@ class _RawSuggestionFieldState<T extends Object>
 
   static const Map<ShortcutActivator, Intent> _shortcuts =
       <ShortcutActivator, Intent>{
-        SingleActivator(LogicalKeyboardKey.arrowUp):
-            AutocompletePreviousOptionIntent(),
-        SingleActivator(LogicalKeyboardKey.arrowDown):
-            AutocompleteNextOptionIntent(),
-        SingleActivator(LogicalKeyboardKey.pageUp): _PageIntent(false),
-        SingleActivator(LogicalKeyboardKey.pageDown): _PageIntent(true),
-        SingleActivator(LogicalKeyboardKey.arrowUp, control: true): _EdgeIntent(
-          false,
-        ),
-        SingleActivator(LogicalKeyboardKey.arrowDown, control: true):
-            _EdgeIntent(true),
-        SingleActivator(LogicalKeyboardKey.arrowUp, meta: true): _EdgeIntent(
-          false,
-        ),
-        SingleActivator(LogicalKeyboardKey.arrowDown, meta: true): _EdgeIntent(
-          true,
-        ),
-      };
+    SingleActivator(LogicalKeyboardKey.arrowUp):
+        AutocompletePreviousOptionIntent(),
+    SingleActivator(LogicalKeyboardKey.arrowDown):
+        AutocompleteNextOptionIntent(),
+    SingleActivator(LogicalKeyboardKey.pageUp): _PageIntent(false),
+    SingleActivator(LogicalKeyboardKey.pageDown): _PageIntent(true),
+    SingleActivator(LogicalKeyboardKey.arrowUp, control: true): _EdgeIntent(
+      false,
+    ),
+    SingleActivator(LogicalKeyboardKey.arrowDown, control: true):
+        _EdgeIntent(true),
+    SingleActivator(LogicalKeyboardKey.arrowUp, meta: true): _EdgeIntent(
+      false,
+    ),
+    SingleActivator(LogicalKeyboardKey.arrowDown, meta: true): _EdgeIntent(
+      true,
+    ),
+  };
 
   // True iff the state indicates that the options should be visible.
   bool get _shouldShowOptions {
@@ -672,10 +673,8 @@ class _RawSuggestionFieldState<T extends Object>
     final count = _options.length;
     final message = count == 1 ? '1 suggestion' : '$count suggestions';
     final direction = Directionality.maybeOf(context) ?? TextDirection.ltr;
-    // material_ui-only:begin
-    SemanticsService.sendAnnouncement(View.of(context), message, direction);
-    // material_ui-only:end
-    // legacy-only: SemanticsService.announce(message, direction);
+    // ignore: deprecated_member_use
+    SemanticsService.announce(message, direction);
   }
 
   // Called when the field's FocusNode changes.
@@ -745,9 +744,8 @@ class _RawSuggestionFieldState<T extends Object>
     if (index < 0) {
       _setHighlight(_options.length - 1);
     } else if (index == 0) {
-      _highlightedOptionIndex.value = widget.firstSuggestionFocus
-          ? _options.length - 1
-          : -1;
+      _highlightedOptionIndex.value =
+          widget.firstSuggestionFocus ? _options.length - 1 : -1;
     } else {
       _setHighlight(index - 1);
     }
@@ -761,9 +759,8 @@ class _RawSuggestionFieldState<T extends Object>
 
   void _moveByPage(_PageIntent intent) {
     if (_reshowIfHidden() || _options.isEmpty) return;
-    final index = _highlightedOptionIndex.value < 0
-        ? 0
-        : _highlightedOptionIndex.value;
+    final index =
+        _highlightedOptionIndex.value < 0 ? 0 : _highlightedOptionIndex.value;
     _setHighlight(intent.forward ? index + _pageSize : index - _pageSize);
   }
 
@@ -828,8 +825,7 @@ class _RawSuggestionFieldState<T extends Object>
       final media = MediaQuery.maybeOf(overlayContext);
       final padding = media?.padding ?? EdgeInsets.zero;
       final insets = media?.viewInsets ?? EdgeInsets.zero;
-      final spaceBelow =
-          overlayBox.size.height -
+      final spaceBelow = overlayBox.size.height -
           insets.bottom -
           padding.bottom -
           (topLeft.dy + fieldBox.size.height);
@@ -840,9 +836,8 @@ class _RawSuggestionFieldState<T extends Object>
       final fieldWidth = fieldBox.size.width;
       width = width == null ? fieldWidth : width.clamp(0.0, fieldWidth);
     }
-    final start = direction == TextDirection.ltr
-        ? Alignment.topLeft
-        : Alignment.topRight;
+    final start =
+        direction == TextDirection.ltr ? Alignment.topLeft : Alignment.topRight;
     final bottomStart = direction == TextDirection.ltr
         ? Alignment.bottomLeft
         : Alignment.bottomRight;
@@ -915,8 +910,7 @@ class _RawSuggestionFieldState<T extends Object>
   @override
   void initState() {
     super.initState();
-    _textEditingController =
-        widget.textEditingController ??
+    _textEditingController = widget.textEditingController ??
         TextEditingController.fromValue(widget.initialValue);
     _lastFieldText = _textEditingController.text;
     _textEditingController.addListener(_onChangedField);
@@ -924,8 +918,8 @@ class _RawSuggestionFieldState<T extends Object>
     _focusNode.addListener(_onChangedFocus);
     _previousOptionAction =
         _SuggestionCallbackAction<AutocompletePreviousOptionIntent>(
-          onInvoke: _highlightPreviousOption,
-        );
+      onInvoke: _highlightPreviousOption,
+    );
     _nextOptionAction = _SuggestionCallbackAction<AutocompleteNextOptionIntent>(
       onInvoke: _highlightNextOption,
     );
